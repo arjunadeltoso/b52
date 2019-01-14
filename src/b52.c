@@ -77,13 +77,13 @@ void load_urls(int c)
 
   MYSQL *con = mysql_init(NULL);
   if (con == NULL) {
-    fprintf(stderr, "%s\n", mysql_error(con));
+    fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_library_end();
     exit(1);
   }
 
   if (mysql_options(con, MYSQL_SET_CHARSET_NAME, "utf8") != 0) {
-    fprintf(stderr, "%s\n", mysql_error(con));
+    fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_close(con);
     mysql_library_end();
     exit(1);
@@ -91,7 +91,7 @@ void load_urls(int c)
 
   if (mysql_real_connect(con, DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD,
                          NULL, 0, NULL, 0) == NULL) {
-    fprintf(stderr, "%s\n", mysql_error(con));
+    fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_close(con);
     mysql_library_end();
     exit(1);
@@ -100,7 +100,7 @@ void load_urls(int c)
   stmt = mysql_stmt_init(con);
 
   if (mysql_stmt_prepare(stmt, SELECT_QUERY, strlen(SELECT_QUERY))) {
-    fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -114,7 +114,7 @@ void load_urls(int c)
   bind_p[0].length= 0;
 
   if (mysql_stmt_bind_param(stmt, bind_p)) {
-    fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -122,7 +122,7 @@ void load_urls(int c)
   }
 
   if (mysql_stmt_execute(stmt)) {
-    fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -136,7 +136,7 @@ void load_urls(int c)
   bind_r[0].buffer_length= URL_LEN;
 
   if (mysql_stmt_execute(stmt)) {
-    fprintf(stderr, "%s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -144,7 +144,7 @@ void load_urls(int c)
   }
 
   if (mysql_stmt_bind_result(stmt, bind_r)) {
-    fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -152,7 +152,7 @@ void load_urls(int c)
   }
 
   if (mysql_stmt_store_result(stmt)) {
-    fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+    fwprintf(stderr, L"%s\n", mysql_stmt_error(stmt));
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
@@ -266,7 +266,7 @@ struct url_list* reqs(struct url_list *first, int handlecount)
     mc = curl_multi_fdset(multi_handle, &fdread, &fdwrite, &fdexcep, &maxfd);
 
     if (mc != CURLM_OK) {
-      fprintf(stderr, "curl_multi_fdset() failed, code %d.\n", mc);
+      fwprintf(stderr, L"curl_multi_fdset() failed, code %d.\n", mc);
       break;
     }
 
