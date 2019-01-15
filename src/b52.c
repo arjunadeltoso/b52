@@ -63,6 +63,12 @@ struct url_list {
 
 struct url_list *first = NULL;
 
+struct stats {
+  int total_reqs;
+  int total_errors;
+  double avg_response_time;
+};
+
 /**
  * Fetch the list of URLs from Mysql/Mariadb and populate the list.
  */
@@ -191,7 +197,7 @@ size_t null_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
  *
  * Returns: the next head of the linked list to be processed.
  */
-struct url_list* reqs(struct url_list *first, int handlecount)
+struct url_list* reqs(struct url_list *first, int handlecount, struct stats *report)
 {
   int i;
   int http_handle[handlecount];
@@ -306,12 +312,26 @@ struct url_list* reqs(struct url_list *first, int handlecount)
       for (idx = 0; idx < handlecount; idx++) {
         found = (msg->easy_handle == handles[idx]);
         if (found) {
-          wprintf(L"request %d status %d\n", idx + 1, msg->data.result);
+          report->total_reqs += 1;
+
+          long response_code;
+          curl_easy_getinfo(handles[idx], CURLINFO_RESPONSE_CODE, &response_code);
+          if (response_code >= 400 && response_code < 600) {
+            report->total_errors += 1;
+          } else {
+            double total;
+            curl_easy_getinfo(handles[idx], CURLINFO_TOTAL_TIME, &total);
+            report->avg_response_time += total;
+          }
+          wprintf(L"request %d - curl status %d - http response code %d\n", idx + 1, msg->data.result,
+            response_code);
           break;
         }
       }
     }
   }
+
+  report->avg_response_time = report->avg_response_time / (report->total_reqs - report->total_errors);
 
   curl_multi_cleanup(multi_handle);
 
@@ -331,6 +351,7 @@ int main(int argc, char **argv)
 
   int i, c, concurrency;
   struct url_list *ptr = NULL;
+  struct stats report = {0, 0, 0};
 
   setlocale(LC_ALL, "");
   setlocale(LC_CTYPE, "");
@@ -348,7 +369,7 @@ int main(int argc, char **argv)
   while (ptr != NULL) {
     wprintf(L"========================================\n");
     wprintf(L"Executing new batch of %d requests.\n", concurrency);
-    ptr = reqs(ptr, concurrency);
+    ptr = reqs(ptr, concurrency, &report);
   }
 
   // Cleanup.
@@ -362,7 +383,12 @@ int main(int argc, char **argv)
   gettimeofday(&tval_after, NULL);
   timersub(&tval_after, &tval_before, &tval_result);
   wprintf(L"========================================\n");
-  wprintf(L"All done in %ld.%04ld seconds.\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+  wprintf(L"=== All done in %ld.%04ld seconds.\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+  wprintf(L"=== Total requests:\t%d\n", report.total_reqs);
+  float errs_p = (float)report.total_errors / report.total_reqs * 100;
+  wprintf(L"=== Total errors:\t%d (%.2lf\%)\n", report.total_errors, errs_p);
+  wprintf(L"=== Avg resp time:\t%lf\n", report.avg_response_time);
+  wprintf(L"========================================\n");
 
   return 0;
 }
