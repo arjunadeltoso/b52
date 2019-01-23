@@ -48,70 +48,62 @@ cc src/b52.c -o b52 -I/usr/include/mysql/ -lmysqlclient -L/usr/lib/x86_64-linux-
 # Example Output
 
 ```shell
-n:~/svn/trunk/tools/b52$ make run-b52 REQS=50 CONC=10
-docker exec -u 0 -it `docker ps | grep b52-load-tester | awk '{print $1;}'` /b52 50 10
+~/svn/trunk/tools/b52$ make run-b52 REQS=50 CONC=10
+docker exec -u 0 -it `docker ps | grep b52-load-tester | awk '{print $1;}'` /b52 40 10
 ========================================
 Executing new batch of 10 requests.
-request 4 status 0
-request 1 status 0
-request 10 status 0
-request 3 status 0
-request 5 status 0
-request 6 status 0
-request 8 status 0
-request 9 status 0
-request 2 status 0
-request 7 status 0
+request 1 - curl status 0 - http response code 301
+request 3 - curl status 0 - http response code 301
+request 4 - curl status 0 - http response code 301
+request 2 - curl status 0 - http response code 301
+request 5 - curl status 0 - http response code 301
+request 9 - curl status 0 - http response code 301
+request 6 - curl status 0 - http response code 301
+request 7 - curl status 0 - http response code 301
+request 8 - curl status 0 - http response code 301
+request 10 - curl status 0 - http response code 301
 ========================================
 Executing new batch of 10 requests.
-request 1 status 0
-request 2 status 0
-request 8 status 0
-request 3 status 0
-request 5 status 0
-request 4 status 0
-request 7 status 0
-request 9 status 0
-request 6 status 0
-request 10 status 0
+request 1 - curl status 0 - http response code 301
+request 7 - curl status 0 - http response code 301
+request 5 - curl status 0 - http response code 429
+request 6 - curl status 0 - http response code 429
+request 8 - curl status 0 - http response code 429
+request 4 - curl status 0 - http response code 429
+request 3 - curl status 0 - http response code 429
+request 2 - curl status 0 - http response code 429
+request 9 - curl status 0 - http response code 429
+request 10 - curl status 0 - http response code 429
 ========================================
 Executing new batch of 10 requests.
-request 2 status 0
-request 1 status 0
-request 3 status 0
-request 4 status 0
-request 5 status 0
-request 6 status 0
-request 7 status 0
-request 8 status 0
-request 9 status 0
-request 10 status 0
+request 5 - curl status 0 - http response code 301
+request 3 - curl status 0 - http response code 301
+request 7 - curl status 0 - http response code 301
+request 8 - curl status 0 - http response code 301
+request 6 - curl status 0 - http response code 301
+request 1 - curl status 0 - http response code 301
+request 2 - curl status 0 - http response code 301
+request 4 - curl status 0 - http response code 301
+request 9 - curl status 0 - http response code 301
+request 10 - curl status 0 - http response code 301
 ========================================
 Executing new batch of 10 requests.
-request 2 status 0
-request 1 status 0
-request 3 status 0
-request 4 status 0
-request 8 status 0
-request 6 status 0
-request 7 status 0
-request 5 status 0
-request 9 status 0
-request 10 status 0
+request 1 - curl status 0 - http response code 301
+request 7 - curl status 0 - http response code 301
+request 3 - curl status 0 - http response code 429
+request 4 - curl status 0 - http response code 429
+request 2 - curl status 0 - http response code 429
+request 6 - curl status 0 - http response code 429
+request 8 - curl status 0 - http response code 429
+request 5 - curl status 0 - http response code 429
+request 9 - curl status 0 - http response code 429
+request 10 - curl status 0 - http response code 429
 ========================================
-Executing new batch of 10 requests.
-request 2 status 0
-request 5 status 0
-request 1 status 0
-request 4 status 0
-request 7 status 0
-request 8 status 0
-request 6 status 0
-request 9 status 0
-request 10 status 0
-request 3 status 0
+=== All done in 13.216249 seconds.
+=== Total requests:     40
+=== Total errors:       16 (40.00%)
+=== Avg resp time:      0.019768
 ========================================
-All done in 5.287455 seconds.
 ```
 
 # Next

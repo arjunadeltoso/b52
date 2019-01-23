@@ -85,6 +85,7 @@ void load_urls(int c)
   if (con == NULL) {
     fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -92,6 +93,7 @@ void load_urls(int c)
     fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -100,6 +102,7 @@ void load_urls(int c)
     fwprintf(stderr, L"%s\n", mysql_error(con));
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -110,6 +113,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -124,6 +128,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -132,6 +137,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -146,6 +152,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -154,6 +161,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -162,6 +170,7 @@ void load_urls(int c)
     mysql_stmt_free_result(stmt);
     mysql_close(con);
     mysql_library_end();
+    fclose(stderr);
     exit(1);
   }
 
@@ -177,6 +186,7 @@ void load_urls(int c)
   }
 
   if (mysql_stmt_free_result(stmt) != 0) fwprintf(stderr, L"unable to free stmt");
+  if (mysql_stmt_close(stmt) != 0) fwprintf(stderr, L"unable to close stmt");
   mysql_close(con);
   mysql_library_end();
 }
